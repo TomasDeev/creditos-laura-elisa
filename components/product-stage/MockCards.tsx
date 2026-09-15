@@ -1,10 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-
-/** HTML/CSS app mockups — premium glass + layered chrome for Laura Elisa */
-
-const EASE = [0.22, 1, 0.36, 1] as const;
+/** HTML/CSS app mockups — GSAP targets via data-gsap attrs (no Framer entrance fights) */
 
 function CheckDot({
   tone = "blue",
@@ -100,14 +96,20 @@ function HistoryRow({
   showLine?: boolean;
 }) {
   return (
-    <div className="relative flex items-center gap-3 py-2.5">
+    <div
+      data-gsap="history-row"
+      className="relative flex items-center gap-3 py-2.5"
+    >
       <CheckDot tone={tone} size="sm" />
       <div className="min-w-0 flex-1">
         <p className="text-[0.8rem] font-medium tracking-[-0.01em] text-[#1c1c1c]/88">
           {label}
         </p>
         {showLine ? (
-          <div className="mt-1.5 h-px w-[72%] bg-gradient-to-r from-black/10 to-transparent" aria-hidden />
+          <div
+            className="mt-1.5 h-px w-[72%] bg-gradient-to-r from-black/10 to-transparent"
+            aria-hidden
+          />
         ) : null}
       </div>
       <span className="shrink-0 text-[0.85rem] font-semibold tabular-nums tracking-[-0.02em] text-[#1c1c1c]">
@@ -125,13 +127,10 @@ const cardInnerGlow =
   "before:pointer-events-none before:absolute before:inset-0 before:rounded-[1.75rem] before:shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_0_0_1px_rgba(255,255,255,0.35)] before:content-['']";
 
 export function DepositToast({ text }: { text: string }) {
-  const reduce = useReducedMotion();
   return (
-    <motion.div
+    <div
+      data-gsap="toast-inner"
       className="inline-flex max-w-[17rem] items-center gap-2.5 rounded-2xl border border-white/80 bg-white/92 px-3.5 py-2.5 backdrop-blur-md shadow-[0_8px_24px_rgba(28,28,28,0.12),0_20px_48px_rgba(0,59,142,0.10),inset_0_1px_0_rgba(255,255,255,0.9)]"
-      initial={reduce ? false : { opacity: 0, y: 8, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.4, ease: EASE }}
     >
       <span
         className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#0577FF] to-[#003B8E] text-white shadow-[0_4px_12px_rgba(5,119,255,0.45),inset_0_1px_0_rgba(255,255,255,0.3)]"
@@ -159,7 +158,7 @@ export function DepositToast({ text }: { text: string }) {
       <p className="text-[0.72rem] font-semibold leading-snug tracking-[-0.015em] text-[#1c1c1c]">
         {text}
       </p>
-    </motion.div>
+    </div>
   );
 }
 
@@ -189,16 +188,12 @@ export function UpcomingPaymentsCard({
   history?: Array<{ label: string; amount: string; tone: "blue" | "dark" }>;
 }) {
   const pct = Math.max(0.08, Math.min(1, progress)) * 100;
-  const reduce = useReducedMotion();
 
   return (
-    <motion.div
+    <div
+      data-gsap="card"
       className={`${cardShell} ${cardShadow} ${cardInnerGlow}`}
-      initial={reduce ? false : { opacity: 0, y: 18, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.45, ease: EASE }}
     >
-      {/* Soft top sheen */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[rgba(5,119,255,0.06)] to-transparent"
         aria-hidden
@@ -211,7 +206,10 @@ export function UpcomingPaymentsCard({
         <p className="mt-1 text-[1.05rem] font-bold tracking-[-0.03em] text-[#1c1c1c]">
           {title}
         </p>
-        <div className="mt-4 flex items-center justify-between gap-2">
+        <div
+          data-gsap="date-row"
+          className="mt-4 flex items-center justify-between gap-2"
+        >
           {dates.map((d, i) =>
             "done" in d ? (
               <CheckDot key={i} tone="blue" />
@@ -222,7 +220,7 @@ export function UpcomingPaymentsCard({
                 line2={d.d2}
                 active={Boolean(d.active)}
               />
-            )
+            ),
           )}
         </div>
         <button
@@ -239,18 +237,16 @@ export function UpcomingPaymentsCard({
           {paidLabel}
         </p>
         <div className="relative mt-3.5 h-2 w-full rounded-full bg-[rgba(0,0,0,0.07)]">
-          <motion.div
+          <div
+            data-gsap="progress-fill"
+            data-progress={pct}
             className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#003B8E] via-[#0577FF] to-[#3D9BFF] shadow-[0_0_12px_rgba(5,119,255,0.55),0_0_24px_rgba(5,119,255,0.25)]"
-            initial={reduce ? false : { width: 0 }}
-            animate={{ width: `${pct}%` }}
-            transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+            style={{ width: "0%" }}
           />
-          <motion.span
+          <span
+            data-gsap="progress-knob"
             className="absolute top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-br from-[#0577FF] to-[#003B8E] text-white shadow-[0_4px_14px_rgba(5,119,255,0.55),0_0_18px_rgba(5,119,255,0.35),inset_0_1px_0_rgba(255,255,255,0.35)]"
-            style={{ left: `calc(${pct}% - 14px)` }}
-            initial={reduce ? false : { scale: 0.6, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.35, ease: EASE }}
+            style={{ left: "0%", opacity: 0 }}
             aria-hidden
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -262,7 +258,7 @@ export function UpcomingPaymentsCard({
                 strokeLinejoin="round"
               />
             </svg>
-          </motion.span>
+          </span>
         </div>
       </div>
 
@@ -270,7 +266,7 @@ export function UpcomingPaymentsCard({
         <p className="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.06em] text-[#1c1c1c]/45">
           Historial
         </p>
-        <div className="divide-y divide-black/5">
+        <div data-gsap="history" className="divide-y divide-black/5">
           {history.map((h) => (
             <HistoryRow
               key={h.label}
@@ -281,7 +277,7 @@ export function UpcomingPaymentsCard({
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -305,14 +301,10 @@ export function BalanceCard({
   payLabel?: string;
   history?: Array<{ label: string; amount: string; tone: "blue" | "dark" }>;
 }) {
-  const reduce = useReducedMotion();
-
   return (
-    <motion.div
+    <div
+      data-gsap="card"
       className={`${cardShell} ${cardShadow} ${cardInnerGlow}`}
-      initial={reduce ? false : { opacity: 0, y: 18, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.45, ease: EASE }}
     >
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[rgba(0,59,142,0.07)] to-transparent"
@@ -326,7 +318,10 @@ export function BalanceCard({
         <p className="mt-1.5 text-[0.78rem] font-medium text-[#1c1c1c]/55">
           {balanceLabel}
         </p>
-        <p className="mt-1 text-[2.4rem] font-extrabold leading-none tracking-[-0.045em] text-[#1c1c1c] sm:text-[2.65rem]">
+        <p
+          data-gsap="balance-amount"
+          className="mt-1 text-[2.4rem] font-extrabold leading-none tracking-[-0.045em] text-[#1c1c1c] sm:text-[2.65rem]"
+        >
           {balance}
         </p>
         <div className="mt-4 flex items-center justify-between gap-3">
@@ -338,11 +333,11 @@ export function BalanceCard({
           </span>
         </div>
         <div className="relative mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-[rgba(0,0,0,0.07)]">
-          <motion.div
+          <div
+            data-gsap="progress-fill"
+            data-progress={28}
             className="h-full rounded-full bg-gradient-to-r from-[rgba(28,28,28,0.7)] to-[#003B8E] shadow-[0_0_10px_rgba(0,59,142,0.35)]"
-            initial={reduce ? false : { width: 0 }}
-            animate={{ width: "28%" }}
-            transition={{ duration: 0.65, delay: 0.2, ease: EASE }}
+            style={{ width: "0%" }}
           />
         </div>
         <button
@@ -358,7 +353,7 @@ export function BalanceCard({
         <p className="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.06em] text-[#1c1c1c]/45">
           Historial
         </p>
-        <div className="divide-y divide-black/5">
+        <div data-gsap="history" className="divide-y divide-black/5">
           {history.map((h) => (
             <HistoryRow
               key={h.label}
@@ -369,7 +364,7 @@ export function BalanceCard({
           ))}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -381,14 +376,10 @@ export function UpcomingMiniCard({
   title?: string;
   rescheduleLabel?: string;
 }) {
-  const reduce = useReducedMotion();
-
   return (
-    <motion.div
+    <div
+      data-gsap="mini-card"
       className="relative w-full overflow-hidden rounded-[1.4rem] border border-white/75 bg-white/92 px-4 py-4 backdrop-blur-md shadow-[0_12px_36px_rgba(28,28,28,0.14),0_28px_64px_rgba(0,59,142,0.10),inset_0_1px_0_rgba(255,255,255,0.9)] sm:px-5"
-      initial={reduce ? false : { opacity: 0, y: 14, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.4, delay: 0.1, ease: EASE }}
     >
       <p className="text-[0.88rem] font-bold tracking-[-0.025em] text-[#1c1c1c]">
         {title}
@@ -406,6 +397,6 @@ export function UpcomingMiniCard({
       >
         {rescheduleLabel}
       </button>
-    </motion.div>
+    </div>
   );
 }
