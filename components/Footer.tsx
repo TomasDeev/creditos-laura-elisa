@@ -61,7 +61,6 @@ export function Footer() {
               <li><Link href="/productos" className="hover:text-orange">Financiamiento automotriz</Link></li>
               <li><Link href="/productos" className="hover:text-orange">Garantía vehicular</Link></li>
               <li><Link href="/productos" className="hover:text-orange">Hipotecas</Link></li>
-              <li><Link href="/productos" className="hover:text-orange">Préstamos personales</Link></li>
             </ul>
           </div>
 

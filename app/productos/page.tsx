@@ -14,12 +14,12 @@ import { PRODUCT_STEPS, PRODUCTS, REQUIREMENTS } from "@/lib/products";
 export const metadata: Metadata = {
   title: "Productos",
   description:
-    "Financiamiento automotriz, préstamo con garantía vehicular, hipotecas y préstamos personales. Claridad, cercanía y desembolso ágil.",
+    "Financiamiento automotriz, préstamo con garantía vehicular e hipotecas. Claridad, cercanía y desembolso ágil.",
   alternates: { canonical: `${SITE.url}/productos` },
   openGraph: {
     title: `Productos | ${SITE.name}`,
     description:
-      "Automotriz, garantía vehicular, hipotecas y préstamos personales con Créditos Laura Elisa.",
+      "Automotriz, garantía vehicular e hipotecas con Créditos Laura Elisa.",
     url: `${SITE.url}/productos`,
   },
 };
@@ -41,7 +41,7 @@ export default function ProductosPage() {
                 Financiamientos e hipotecas a tu medida
               </h1>
               <p className="mt-5 text-base text-charcoal-muted sm:text-lg">
-                Automotriz · Garantía vehicular · Hipotecas · Préstamos personales.
+                Automotriz · Garantía vehicular · Hipotecas.
                 Sin letras chicas. {SITE.slogan}.
               </p>
               <div className="mt-9 flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">

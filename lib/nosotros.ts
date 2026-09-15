@@ -1,7 +1,7 @@
 export const NOSOTROS = {
   whatIs: {
     title: "¿Qué es Créditos Laura Elisa?",
-    body: "Créditos Laura Elisa es una financiera en República Dominicana especializada en financiamientos e hipotecas: automotriz, préstamos con garantía vehicular, hipotecas y préstamos personales. Nuestro lema: Tu sueño, nuestro compromiso.",
+    body: "Créditos Laura Elisa es una financiera en República Dominicana especializada en financiamientos e hipotecas: automotriz, préstamos con garantía vehicular e hipotecas. Nuestro lema: Tu sueño, nuestro compromiso.",
   },
   branch: {
     title: "Sucursal",
@@ -23,10 +23,6 @@ export const NOSOTROS = {
         title: "Hipotecas",
         body: "Financiamiento para tu casa o patrimonio, con asesoría cercana.",
       },
-      {
-        title: "Préstamos personales",
-        body: "Capital flexible para emergencias, negocio o proyectos personales.",
-      },
     ],
   },
   mission: {
@@ -35,7 +31,7 @@ export const NOSOTROS = {
   },
   vision: {
     title: "Visión",
-    body: "Ser la financiera de confianza en República Dominicana para vehículos, hipotecas y liquidez personal.",
+    body: "Ser la financiera de confianza en República Dominicana para vehículos, hipotecas y liquidez con garantía.",
   },
   values: {
     title: "Valores",

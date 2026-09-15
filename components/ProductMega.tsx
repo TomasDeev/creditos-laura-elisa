@@ -18,13 +18,11 @@ import {
   Key,
   Scale,
   Shield,
-  Wallet,
 } from "./icons";
 import {
   BadgeAutomotriz,
   BadgeGarantia,
   BadgeHipotecas,
-  BadgePersonales,
 } from "./product-stage/ProductBadges";
 import {
   StageFrame,
@@ -88,10 +86,9 @@ const BLOCKS: Block[] = [
     Badge: BadgeAutomotriz,
     stage: {
       cream: "#F7F1E8",
-      ring: "rgba(245,130,32,0.20)",
+      ring: "rgba(245,130,32,0.18)",
       kind: "loan",
       toast: "Tu financiamiento automotriz fue desembolsado",
-      texture: "/mock-automotriz.png",
       loan: {
         paidLabel: "RD$45,000 pagado del total",
         progress: 0.38,
@@ -138,10 +135,9 @@ const BLOCKS: Block[] = [
     Badge: BadgeGarantia,
     stage: {
       cream: "#E8F3EE",
-      ring: "rgba(15,122,69,0.16)",
+      ring: "rgba(15,122,69,0.14)",
       kind: "advance",
       toast: "Tu financiamiento con garantía fue desembolsado",
-      texture: "/mock-garantia.png",
       advance: {
         balance: "RD$185,000",
         paidAmount: "RD$65,000",
@@ -188,10 +184,9 @@ const BLOCKS: Block[] = [
     Badge: BadgeHipotecas,
     stage: {
       cream: "#EAF3F0",
-      ring: "rgba(0,59,142,0.14)",
+      ring: "rgba(0,59,142,0.12)",
       kind: "advance",
       toast: "Tu hipoteca Laura Elisa fue desembolsada",
-      texture: "/mock-hipotecas.png",
       advance: {
         balance: "RD$1,850,000",
         paidAmount: "RD$150,000",
@@ -203,66 +198,16 @@ const BLOCKS: Block[] = [
       },
     },
   },
-  {
-    id: "personal",
-    name: "Personales",
-    title: "Capital para lo que la vida pide hoy.",
-    sub: "Educación, salud, negocio o imprevistos — montos a tu necesidad y plazos flexibles, sin letras chicas.",
-    benefits: [
-      {
-        title: "Montos a tu necesidad, cuando los necesitas",
-        link: "Cotizar",
-        href: "/#contacto",
-        Icon: Wallet,
-      },
-      {
-        title: "Pagos flexibles que se adaptan a tu mes",
-        link: "Ver más",
-        href: "/#faq",
-        Icon: Calendar,
-      },
-      {
-        title: "Sin letras pequeñas ni costos ocultos",
-        link: "Ver más",
-        href: "/#faq",
-        Icon: Scale,
-      },
-      {
-        title: "Atención cercana de principio a fin",
-        link: "Solicitar",
-        href: "/#contacto",
-        Icon: Shield,
-      },
-    ],
-    infoHref: "/productos#personal",
-    Badge: BadgePersonales,
-    stage: {
-      cream: "#F8F0EB",
-      ring: "rgba(245,130,32,0.18)",
-      kind: "loan",
-      toast: "Tu préstamo personal fue desembolsado",
-      texture: "/mock-personal.png",
-      loan: {
-        paidLabel: "RD$18,000 pagado del total",
-        progress: 0.45,
-        history: [
-          { label: "Segunda cuota", amount: "RD$9,000", tone: "blue" },
-          { label: "Primera cuota", amount: "RD$9,000", tone: "blue" },
-          { label: "Desembolso personal", amount: "RD$80,000", tone: "dark" },
-        ],
-      },
-    },
-  },
 ];
 
 function ProductCopy({ block }: { block: Block }) {
   const Badge = block.Badge;
 
   return (
-    <div className="flex flex-col justify-center bg-[#0a0a0a] px-6 py-16 text-white sm:px-10 md:px-12 md:py-20 lg:min-h-[85vh] lg:px-14 lg:py-24">
+    <div className="flex flex-col justify-center bg-[#003B8E] px-6 py-16 text-white sm:px-10 md:px-12 md:py-20 lg:min-h-[85vh] lg:px-14 lg:py-24">
       {/* Product identity: circular icon + HUGE name */}
       <div className="mb-7 flex items-center gap-3.5 sm:gap-4">
-        <span className="shrink-0 drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]">
+        <span className="shrink-0 drop-shadow-[0_8px_24px_rgba(0,0,0,0.28)]">
           <Badge size={58} />
         </span>
         <h2 className="text-[2.65rem] font-extrabold leading-[0.95] tracking-[-0.045em] sm:text-[3.25rem] md:text-[3.75rem] lg:text-[4.15rem]">
@@ -273,26 +218,26 @@ function ProductCopy({ block }: { block: Block }) {
       <h3 className="max-w-xl text-[1.55rem] font-semibold leading-[1.12] tracking-[-0.03em] text-white sm:text-[1.85rem] md:text-[2.15rem]">
         {block.title}
       </h3>
-      <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-white/60 sm:text-base">
+      <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-white/70 sm:text-base">
         {block.sub}
       </p>
 
       {/* 2×2 benefit grid */}
-      <div className="mt-9 grid grid-cols-1 gap-x-8 gap-y-7 border-t border-white/10 pt-8 sm:grid-cols-2">
+      <div className="mt-9 grid grid-cols-1 gap-x-8 gap-y-7 border-t border-white/15 pt-8 sm:grid-cols-2">
         {block.benefits.map((bn) => {
           const BIcon = bn.Icon;
           return (
             <div key={bn.title} className="flex items-start gap-3">
-              <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFD31F] text-[#1c1c1c] shadow-[0_2px_10px_rgba(255,211,31,0.35)]">
+              <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F58220] text-[#1c1c1c] shadow-[0_2px_12px_rgba(245,130,32,0.45)]">
                 <BIcon size={15} />
               </span>
               <div className="min-w-0">
-                <p className="text-[0.9rem] font-medium leading-snug text-white/92 sm:text-[0.95rem]">
+                <p className="text-[0.9rem] font-medium leading-snug text-white/95 sm:text-[0.95rem]">
                   {bn.title}
                 </p>
                 <Link
                   href={bn.href}
-                  className="mt-2 inline-flex items-center gap-1 text-[0.8rem] font-semibold text-[#FFD31F] transition hover:brightness-110"
+                  className="mt-2 inline-flex items-center gap-1 text-[0.8rem] font-semibold text-[#F58220] transition hover:brightness-110"
                 >
                   {bn.link}
                   <ArrowUpRight size={12} />
@@ -314,7 +259,7 @@ function ProductCopy({ block }: { block: Block }) {
         </Link>
         <Link
           href="/#contacto"
-          className="focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/35 px-7 text-sm font-semibold text-white transition hover:border-white/60 hover:bg-white/5"
+          className="focus-ring inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/40 px-7 text-sm font-semibold text-white transition hover:border-white/70 hover:bg-white/10"
         >
           Solicitar ahora
           <ArrowUpRight size={15} />
@@ -381,10 +326,15 @@ export function ProductMega() {
               }`}
             >
               <ProductCopy block={b} />
-              {/* Mobile: mock under each product */}
+              {/* Mobile: polished stage under each product (phone frame) */}
               <div className="lg:hidden">
-                <div className="relative min-h-[26rem]">
-                  <StageFrame layers={[b.stage]} activeIndex={0} />
+                <div className="relative min-h-[30rem] sm:min-h-[32rem]">
+                  <StageFrame
+                    layers={[b.stage]}
+                    activeIndex={0}
+                    framed
+                    className="min-h-[30rem] sm:min-h-[32rem]"
+                  />
                 </div>
               </div>
             </article>

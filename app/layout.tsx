@@ -15,7 +15,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 
 const title = `${SITE.name} | ${SITE.tagline}`;
 const description =
-  "Créditos Laura Elisa en República Dominicana. Financiamiento automotriz, hipotecas, préstamos con garantía vehicular y préstamos personales. Tu sueño, nuestro compromiso.";
+  "Créditos Laura Elisa en República Dominicana. Financiamiento automotriz, hipotecas y préstamos con garantía vehicular. Tu sueño, nuestro compromiso.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -29,7 +29,6 @@ export const metadata: Metadata = {
     "financiamiento automotriz",
     "hipotecas República Dominicana",
     "préstamos con garantía vehicular",
-    "préstamos personales",
     "Créditos Laura Elisa",
     "Santo Domingo",
   ],

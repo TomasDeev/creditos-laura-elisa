@@ -34,7 +34,7 @@ export function LiquidityBanner() {
             <span className="text-magenta">impulsar tu negocio</span>.
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-charcoal-muted sm:text-lg">
-            Automotriz · Garantía vehicular · Hipotecas · Préstamos personales.
+            Automotriz · Garantía vehicular · Hipotecas.
             Claridad, cercanía y desembolso ágil en República Dominicana.
           </p>
         </Reveal>

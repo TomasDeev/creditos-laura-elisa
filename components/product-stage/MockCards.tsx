@@ -1,6 +1,10 @@
 "use client";
 
-/** HTML/CSS app mockups inspired by Possible Finance Loan/Advance stage UI */
+import { motion, useReducedMotion } from "framer-motion";
+
+/** HTML/CSS app mockups — premium glass + layered chrome for Laura Elisa */
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 function CheckDot({
   tone = "blue",
@@ -13,7 +17,7 @@ function CheckDot({
   if (tone === "blue") {
     return (
       <span
-        className={`inline-flex ${dim} items-center justify-center rounded-full bg-[#0577FF] text-white shadow-[0_2px_8px_rgba(5,119,255,0.35)]`}
+        className={`inline-flex ${dim} items-center justify-center rounded-full bg-[#0577FF] text-white shadow-[0_4px_14px_rgba(5,119,255,0.45),inset_0_1px_0_rgba(255,255,255,0.35)]`}
         aria-hidden
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -31,7 +35,7 @@ function CheckDot({
   if (tone === "dark") {
     return (
       <span
-        className={`inline-flex ${dim} items-center justify-center rounded-full bg-[#1c1c1c] text-white`}
+        className={`inline-flex ${dim} items-center justify-center rounded-full bg-[#1c1c1c] text-white shadow-[0_3px_10px_rgba(28,28,28,0.35),inset_0_1px_0_rgba(255,255,255,0.12)]`}
         aria-hidden
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -49,7 +53,7 @@ function CheckDot({
   if (tone === "outline") {
     return (
       <span
-        className={`inline-flex ${dim} flex-col items-center justify-center rounded-full border-[1.5px] border-[#0577FF]/55 bg-white text-[0.58rem] font-bold leading-tight text-[#1c1c1c] sm:text-[0.62rem]`}
+        className={`inline-flex ${dim} flex-col items-center justify-center rounded-full border-[1.5px] border-[#0577FF]/55 bg-white text-[0.58rem] font-bold leading-tight text-[#1c1c1c] shadow-[0_2px_8px_rgba(5,119,255,0.12)] sm:text-[0.62rem]`}
       />
     );
   }
@@ -73,8 +77,8 @@ function DateDot({
     <span
       className={`inline-flex h-11 w-11 flex-col items-center justify-center rounded-full bg-white text-center leading-[1.05] sm:h-12 sm:w-12 ${
         active
-          ? "border-[1.5px] border-[#0577FF]/55 text-[#1c1c1c]"
-          : "border border-black/12 text-black/45"
+          ? "border-[1.5px] border-[#0577FF]/60 text-[#1c1c1c] shadow-[0_4px_14px_rgba(5,119,255,0.22)]"
+          : "border border-black/10 text-black/45 shadow-[0_1px_3px_rgba(28,28,28,0.06)]"
       }`}
       aria-hidden
     >
@@ -99,23 +103,38 @@ function HistoryRow({
     <div className="relative flex items-center gap-3 py-2.5">
       <CheckDot tone={tone} size="sm" />
       <div className="min-w-0 flex-1">
-        <p className="text-[0.8rem] font-medium text-[#1c1c1c]/88">{label}</p>
+        <p className="text-[0.8rem] font-medium tracking-[-0.01em] text-[#1c1c1c]/88">
+          {label}
+        </p>
         {showLine ? (
-          <div className="mt-1.5 h-px w-[72%] bg-black/8" aria-hidden />
+          <div className="mt-1.5 h-px w-[72%] bg-gradient-to-r from-black/10 to-transparent" aria-hidden />
         ) : null}
       </div>
-      <span className="shrink-0 text-[0.85rem] font-semibold tabular-nums text-[#1c1c1c]">
+      <span className="shrink-0 text-[0.85rem] font-semibold tabular-nums tracking-[-0.02em] text-[#1c1c1c]">
         {amount}
       </span>
     </div>
   );
 }
 
+const cardShell =
+  "relative w-full overflow-hidden rounded-[1.75rem] border border-white/70 bg-white/95 backdrop-blur-md";
+const cardShadow =
+  "shadow-[0_4px_6px_rgba(28,28,28,0.04),0_22px_50px_rgba(28,28,28,0.14),0_40px_90px_rgba(0,59,142,0.10)]";
+const cardInnerGlow =
+  "before:pointer-events-none before:absolute before:inset-0 before:rounded-[1.75rem] before:shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_0_0_1px_rgba(255,255,255,0.35)] before:content-['']";
+
 export function DepositToast({ text }: { text: string }) {
+  const reduce = useReducedMotion();
   return (
-    <div className="inline-flex max-w-[16.5rem] items-center gap-2.5 rounded-2xl border border-black/6 bg-white px-3.5 py-2.5 shadow-[0_12px_32px_rgba(28,28,28,0.14)]">
+    <motion.div
+      className="inline-flex max-w-[17rem] items-center gap-2.5 rounded-2xl border border-white/80 bg-white/92 px-3.5 py-2.5 backdrop-blur-md shadow-[0_8px_24px_rgba(28,28,28,0.12),0_20px_48px_rgba(0,59,142,0.10),inset_0_1px_0_rgba(255,255,255,0.9)]"
+      initial={reduce ? false : { opacity: 0, y: 8, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.4, ease: EASE }}
+    >
       <span
-        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0577FF] text-white"
+        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#0577FF] to-[#003B8E] text-white shadow-[0_4px_12px_rgba(5,119,255,0.45),inset_0_1px_0_rgba(255,255,255,0.3)]"
         aria-hidden
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
@@ -137,10 +156,10 @@ export function DepositToast({ text }: { text: string }) {
           <circle cx="12" cy="14.5" r="1.4" fill="currentColor" />
         </svg>
       </span>
-      <p className="text-[0.72rem] font-semibold leading-snug tracking-[-0.01em] text-[#1c1c1c]">
+      <p className="text-[0.72rem] font-semibold leading-snug tracking-[-0.015em] text-[#1c1c1c]">
         {text}
       </p>
-    </div>
+    </motion.div>
   );
 }
 
@@ -152,10 +171,7 @@ export function UpcomingPaymentsCard({
     { done: true },
     { d1: "22", d2: "Jul", active: true },
     { d1: "5", d2: "Ago" },
-  ] as Array<
-    | { done: true }
-    | { d1: string; d2: string; active?: boolean }
-  >,
+  ] as Array<{ done: true } | { d1: string; d2: string; active?: boolean }>,
   rescheduleLabel = "Reprogramar",
   paidLabel = "RD$45,000 pagado del total",
   progress = 0.42,
@@ -173,11 +189,26 @@ export function UpcomingPaymentsCard({
   history?: Array<{ label: string; amount: string; tone: "blue" | "dark" }>;
 }) {
   const pct = Math.max(0.08, Math.min(1, progress)) * 100;
+  const reduce = useReducedMotion();
 
   return (
-    <div className="w-full overflow-hidden rounded-[1.65rem] border border-black/6 bg-white shadow-[0_28px_70px_rgba(28,28,28,0.16)]">
-      <div className="px-5 pb-2 pt-5 sm:px-6 sm:pt-6">
-        <p className="text-[0.95rem] font-semibold tracking-[-0.02em] text-[#1c1c1c]">
+    <motion.div
+      className={`${cardShell} ${cardShadow} ${cardInnerGlow}`}
+      initial={reduce ? false : { opacity: 0, y: 18, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.45, ease: EASE }}
+    >
+      {/* Soft top sheen */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[rgba(5,119,255,0.06)] to-transparent"
+        aria-hidden
+      />
+
+      <div className="relative px-5 pb-2 pt-5 sm:px-6 sm:pt-6">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.08em] text-[#003B8E]/55">
+          Laura Elisa
+        </p>
+        <p className="mt-1 text-[1.05rem] font-bold tracking-[-0.03em] text-[#1c1c1c]">
           {title}
         </p>
         <div className="mt-4 flex items-center justify-between gap-2">
@@ -197,27 +228,32 @@ export function UpcomingPaymentsCard({
         <button
           type="button"
           tabIndex={-1}
-          className="mt-5 flex h-11 w-full items-center justify-center rounded-full bg-[#1c1c1c] text-sm font-semibold text-white"
+          className="mt-5 flex h-11 w-full items-center justify-center rounded-full bg-[#1c1c1c] text-sm font-semibold text-white shadow-[0_6px_16px_rgba(28,28,28,0.28)]"
         >
           {rescheduleLabel}
         </button>
       </div>
 
-      <div className="border-t border-black/6 px-5 py-4 sm:px-6">
-        <p className="text-[0.9rem] font-semibold tracking-[-0.015em] text-[#1c1c1c]">
+      <div className="relative border-t border-black/6 bg-gradient-to-b from-[rgba(248,250,252,0.8)] to-transparent px-5 py-4 sm:px-6">
+        <p className="text-[0.9rem] font-semibold tracking-[-0.02em] text-[#1c1c1c]">
           {paidLabel}
         </p>
-        <div className="relative mt-3 h-1.5 w-full rounded-full bg-black/8">
-          <div
-            className="absolute inset-y-0 left-0 rounded-full bg-[#0577FF]"
-            style={{ width: `${pct}%` }}
+        <div className="relative mt-3.5 h-2 w-full rounded-full bg-[rgba(0,0,0,0.07)]">
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#003B8E] via-[#0577FF] to-[#3D9BFF] shadow-[0_0_12px_rgba(5,119,255,0.55),0_0_24px_rgba(5,119,255,0.25)]"
+            initial={reduce ? false : { width: 0 }}
+            animate={{ width: `${pct}%` }}
+            transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
           />
-          <span
-            className="absolute top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-[#0577FF] text-white shadow-[0_2px_8px_rgba(5,119,255,0.4)]"
-            style={{ left: `calc(${pct}% - 12px)` }}
+          <motion.span
+            className="absolute top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-br from-[#0577FF] to-[#003B8E] text-white shadow-[0_4px_14px_rgba(5,119,255,0.55),0_0_18px_rgba(5,119,255,0.35),inset_0_1px_0_rgba(255,255,255,0.35)]"
+            style={{ left: `calc(${pct}% - 14px)` }}
+            initial={reduce ? false : { scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.35, ease: EASE }}
             aria-hidden
           >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
               <path
                 d="M6.5 12.5 10.2 16 17.5 8"
                 stroke="currentColor"
@@ -226,12 +262,12 @@ export function UpcomingPaymentsCard({
                 strokeLinejoin="round"
               />
             </svg>
-          </span>
+          </motion.span>
         </div>
       </div>
 
-      <div className="border-t border-black/6 px-5 pb-5 pt-3 sm:px-6">
-        <p className="mb-1 text-[0.8rem] font-semibold text-[#1c1c1c]/75">
+      <div className="relative border-t border-black/6 px-5 pb-5 pt-3 sm:px-6">
+        <p className="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.06em] text-[#1c1c1c]/45">
           Historial
         </p>
         <div className="divide-y divide-black/5">
@@ -245,7 +281,7 @@ export function UpcomingPaymentsCard({
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -269,37 +305,57 @@ export function BalanceCard({
   payLabel?: string;
   history?: Array<{ label: string; amount: string; tone: "blue" | "dark" }>;
 }) {
+  const reduce = useReducedMotion();
+
   return (
-    <div className="w-full overflow-hidden rounded-[1.65rem] border border-black/6 bg-white shadow-[0_28px_70px_rgba(28,28,28,0.16)]">
-      <div className="px-5 pb-1 pt-5 sm:px-6 sm:pt-6">
-        <p className="text-[0.8rem] font-medium text-[#1c1c1c]/55">
+    <motion.div
+      className={`${cardShell} ${cardShadow} ${cardInnerGlow}`}
+      initial={reduce ? false : { opacity: 0, y: 18, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.45, ease: EASE }}
+    >
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[rgba(0,59,142,0.07)] to-transparent"
+        aria-hidden
+      />
+
+      <div className="relative px-5 pb-1 pt-5 sm:px-6 sm:pt-6">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.08em] text-[#003B8E]/55">
+          Laura Elisa
+        </p>
+        <p className="mt-1.5 text-[0.78rem] font-medium text-[#1c1c1c]/55">
           {balanceLabel}
         </p>
-        <p className="mt-1 text-[2.35rem] font-extrabold leading-none tracking-[-0.04em] text-[#1c1c1c] sm:text-[2.6rem]">
+        <p className="mt-1 text-[2.4rem] font-extrabold leading-none tracking-[-0.045em] text-[#1c1c1c] sm:text-[2.65rem]">
           {balance}
         </p>
         <div className="mt-4 flex items-center justify-between gap-3">
           <span className="text-[0.78rem] font-medium text-[#1c1c1c]/55">
             {paidLabel}
           </span>
-          <span className="text-[0.85rem] font-semibold tabular-nums text-[#1c1c1c]">
+          <span className="text-[0.85rem] font-semibold tabular-nums tracking-[-0.02em] text-[#1c1c1c]">
             {paidAmount}
           </span>
         </div>
-        <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-black/8">
-          <div className="h-full w-[28%] rounded-full bg-[#1c1c1c]/55" />
+        <div className="relative mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-[rgba(0,0,0,0.07)]">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-[rgba(28,28,28,0.7)] to-[#003B8E] shadow-[0_0_10px_rgba(0,59,142,0.35)]"
+            initial={reduce ? false : { width: 0 }}
+            animate={{ width: "28%" }}
+            transition={{ duration: 0.65, delay: 0.2, ease: EASE }}
+          />
         </div>
         <button
           type="button"
           tabIndex={-1}
-          className="mt-5 flex h-11 w-full items-center justify-center rounded-full bg-[#1c1c1c] text-sm font-semibold text-white"
+          className="mt-5 flex h-11 w-full items-center justify-center rounded-full bg-[#1c1c1c] text-sm font-semibold text-white shadow-[0_6px_16px_rgba(28,28,28,0.28)]"
         >
           {payLabel}
         </button>
       </div>
 
-      <div className="mt-4 border-t border-black/6 px-5 pb-5 pt-3 sm:px-6">
-        <p className="mb-1 text-[0.8rem] font-semibold text-[#1c1c1c]/75">
+      <div className="relative mt-4 border-t border-black/6 px-5 pb-5 pt-3 sm:px-6">
+        <p className="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.06em] text-[#1c1c1c]/45">
           Historial
         </p>
         <div className="divide-y divide-black/5">
@@ -313,7 +369,7 @@ export function BalanceCard({
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -325,9 +381,16 @@ export function UpcomingMiniCard({
   title?: string;
   rescheduleLabel?: string;
 }) {
+  const reduce = useReducedMotion();
+
   return (
-    <div className="w-full overflow-hidden rounded-[1.35rem] border border-black/6 bg-white px-4 py-4 shadow-[0_18px_48px_rgba(28,28,28,0.14)] sm:px-5">
-      <p className="text-[0.85rem] font-semibold tracking-[-0.02em] text-[#1c1c1c]">
+    <motion.div
+      className="relative w-full overflow-hidden rounded-[1.4rem] border border-white/75 bg-white/92 px-4 py-4 backdrop-blur-md shadow-[0_12px_36px_rgba(28,28,28,0.14),0_28px_64px_rgba(0,59,142,0.10),inset_0_1px_0_rgba(255,255,255,0.9)] sm:px-5"
+      initial={reduce ? false : { opacity: 0, y: 14, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.4, delay: 0.1, ease: EASE }}
+    >
+      <p className="text-[0.88rem] font-bold tracking-[-0.025em] text-[#1c1c1c]">
         {title}
       </p>
       <div className="mt-3.5 flex items-center justify-between gap-2">
@@ -339,10 +402,10 @@ export function UpcomingMiniCard({
       <button
         type="button"
         tabIndex={-1}
-        className="mt-4 flex h-10 w-full items-center justify-center rounded-full bg-[#1c1c1c] text-sm font-semibold text-white"
+        className="mt-4 flex h-10 w-full items-center justify-center rounded-full bg-[#1c1c1c] text-sm font-semibold text-white shadow-[0_5px_14px_rgba(28,28,28,0.25)]"
       >
         {rescheduleLabel}
       </button>
-    </div>
+    </motion.div>
   );
 }
