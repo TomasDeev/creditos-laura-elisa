@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+:root {
+  /* brand-blue aliased as magenta for existing class names */
+  --magenta: #003B8E;
+  --magenta-dark: #002a66;
+  --magenta-soft: #e8f0fb;
+  --softblue: #f0f8ff;
+  --charcoal: #1c1c1c;
+  --charcoal-muted: #5c5c5c;
+  --surface: #ffffff;
+  --surface-alt: #f5f7fb;
+  --border: #e4e8f0;
+  --success: #0f7a45;
+  --error: #c62828;
+  --orange: #F58220;
+  --orange-dark: #d66d12;
+}
+
+@theme inline {
+  --color-magenta: var(--magenta);
+  --color-magenta-dark: var(--magenta-dark);
+  --color-magenta-soft: var(--magenta-soft);
+  --color-softblue: var(--softblue);
+  --color-charcoal: var(--charcoal);
+  --color-charcoal-muted: var(--charcoal-muted);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-border: var(--border);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-orange: var(--orange);
+  --color-orange-dark: var(--orange-dark);
+  --font-sans: var(--font-plus-jakarta);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--surface);
+  color: var(--charcoal);
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.011em;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--orange) 32%, white);
+  color: var(--charcoal);
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-narrow {
+    padding-inline: 1.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-narrow {
+    max-width: 78rem;
+  }
+}
+
+/* Section rhythm helpers */
+.section-pad {
+  padding-block: 4rem;
+}
+
+@media (min-width: 768px) {
+  .section-pad {
+    padding-block: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-pad {
+    padding-block: 6rem;
+  }
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  .wa-float-safe {
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Instagram embed containment */
+.instagram-embed-wrap {
+  position: relative;
+}
+.instagram-embed-wrap iframe,
+.instagram-embed-wrap .instagram-media {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.scrollbar-none::-webkit-scrollbar{display:none}
+.scrollbar-none{scrollbar-width:none;-ms-overflow-style:none}

@@ -1,0 +1,26 @@
+import type { MetadataRoute } from "next";
+import { SITE } from "@/lib/constants";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
+  return [
+    {
+      url: SITE.url,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
+      url: `${SITE.url}/nosotros`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE.url}/productos`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+  ];
+}
