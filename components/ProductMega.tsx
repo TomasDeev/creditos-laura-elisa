@@ -269,44 +269,61 @@ function ProductCopy({ block }: { block: Block }) {
   );
 }
 
+/** Continuous progress 0 → n-1 from panel midpoints vs viewport anchor */
+function progressFromPanels(
+  panels: (HTMLElement | null)[],
+  viewportMid: number,
+): number {
+  const mids: number[] = [];
+  for (const el of panels) {
+    if (!el) return 0;
+    const rect = el.getBoundingClientRect();
+    mids.push(rect.top + rect.height / 2);
+  }
+  if (mids.length === 0) return 0;
+  if (mids.length === 1) return 0;
+
+  if (viewportMid <= mids[0]) return 0;
+  const last = mids.length - 1;
+  if (viewportMid >= mids[last]) return last;
+
+  for (let i = 0; i < last; i++) {
+    const a = mids[i];
+    const b = mids[i + 1];
+    if (viewportMid >= a && viewportMid <= b) {
+      const span = b - a || 1;
+      return i + (viewportMid - a) / span;
+    }
+  }
+  return last;
+}
+
 export function ProductMega() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
   const panelRefs = useRef<(HTMLElement | null)[]>([]);
   const stages = BLOCKS.map((b) => b.stage);
+  const rafRef = useRef(0);
 
   useEffect(() => {
     const update = () => {
       if (window.innerWidth < 1024) return;
-
-      const panels = panelRefs.current;
       const viewportMid = window.innerHeight * 0.42;
-      let best = 0;
-      let bestDist = Number.POSITIVE_INFINITY;
+      const next = progressFromPanels(panelRefs.current, viewportMid);
+      setProgress((prev) => (Math.abs(prev - next) < 0.0008 ? prev : next));
+    };
 
-      panels.forEach((el, i) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const mid = rect.top + rect.height / 2;
-        const dist = Math.abs(mid - viewportMid);
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = i;
-        }
-        if (rect.top <= viewportMid && rect.bottom >= viewportMid) {
-          best = i;
-          bestDist = 0;
-        }
-      });
-
-      setActiveIndex((prev) => (prev === best ? prev : best));
+    const onScrollOrResize = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(update);
     };
 
     update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
     return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
     };
   }, []);
 
@@ -343,7 +360,7 @@ export function ProductMega() {
 
         <div className="relative hidden lg:block">
           <div className="sticky top-[4.75rem] h-[calc(100vh-4.75rem)] overflow-hidden">
-            <StageFrame layers={stages} activeIndex={activeIndex} />
+            <StageFrame layers={stages} progress={progress} />
           </div>
         </div>
       </div>
