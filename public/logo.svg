@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Créditos Laura Elisa">
+  <circle cx="100" cy="100" r="100" fill="#003B8E"/>
+  <path fill="#FFFFFF" d="M48 36h40v88H152v40H48z"/>
+  <path fill="#F58220" d="M100 36h56v32H100z"/>
+  <path fill="#F58220" d="M100 84h48v28H100z"/>
+  <path fill="#F58220" d="M100 128h56v36H100z"/>
+  <path fill="#F58220" d="M140 36h28v128h-28z"/>
+</svg>

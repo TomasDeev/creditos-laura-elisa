@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 720" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="640" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#003B8E"/>
+      <stop offset="1" stop-color="#002a66"/>
+    </linearGradient>
+    <linearGradient id="orb" x1="400" y1="80" x2="600" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F58220"/>
+      <stop offset="1" stop-color="#F58220" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="720" rx="48" fill="url(#bg)"/>
+  <circle cx="520" cy="140" r="160" fill="url(#orb)" opacity=".45"/>
+  <circle cx="80" cy="600" r="120" fill="#F58220" opacity=".15"/>
+  <!-- car silhouette -->
+  <g transform="translate(80,280)">
+    <path d="M40 140h400l-40-90c-8-18-22-28-42-28H140c-20 0-34 10-42 28L40 140z" fill="#fff" opacity=".12"/>
+    <path d="M70 140h340v40H70z" fill="#fff" opacity=".18"/>
+    <circle cx="130" cy="185" r="28" fill="#F58220"/>
+    <circle cx="130" cy="185" r="12" fill="#003B8E"/>
+    <circle cx="350" cy="185" r="28" fill="#F58220"/>
+    <circle cx="350" cy="185" r="12" fill="#003B8E"/>
+    <path d="M150 70h70l20 50H140l10-50z" fill="#fff" opacity=".25"/>
+    <path d="M260 70h90l-10 50H250l10-50z" fill="#fff" opacity=".25"/>
+  </g>
+  <!-- keys accent card -->
+  <rect x="60" y="80" width="200" height="140" rx="28" fill="#fff"/>
+  <circle cx="120" cy="140" r="28" stroke="#003B8E" stroke-width="6"/>
+  <circle cx="120" cy="140" r="10" fill="#F58220"/>
+  <path d="M145 155l70 35M190 175l18-14M202 185l16-12" stroke="#003B8E" stroke-width="6" stroke-linecap="round"/>
+  <text x="90" y="205" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#003B8E">Conservas las llaves</text>
+  <!-- orange badge -->
+  <rect x="360" y="520" width="220" height="100" rx="24" fill="#F58220"/>
+  <text x="385" y="560" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#fff" letter-spacing="1">CRÉDITO ÁGIL</text>
+  <text x="385" y="590" font-family="system-ui,sans-serif" font-size="18" font-weight="800" fill="#fff">Dinero rápido, sin vueltas</text>
+  <!-- slogan -->
+  <text x="80" y="660" font-family="system-ui,sans-serif" font-size="22" font-weight="700" fill="#fff" opacity=".9">Tu sueño, nuestro compromiso</text>
+</svg>
