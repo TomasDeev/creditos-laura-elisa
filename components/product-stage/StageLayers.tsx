@@ -1,6 +1,5 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 import {
   BalanceCard,
@@ -28,72 +27,12 @@ export type StageContent = {
   ring: string;
   kind: StageKind;
   toast: string;
-  /** Optional mock PNG — kept for API compat; CSS atmosphere preferred */
   texture?: string;
   loan?: LoanStageData;
   advance?: AdvanceStageData;
 };
 
-function clamp(n: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, n));
-}
-
-function parseColor(c: string): [number, number, number, number] {
-  const hex = c.trim();
-  if (hex.startsWith("#")) {
-    const h = hex.slice(1);
-    const full =
-      h.length === 3
-        ? h
-            .split("")
-            .map((ch) => ch + ch)
-            .join("")
-        : h;
-    const n = parseInt(full, 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255, 1];
-  }
-  const m = hex.match(/rgba?\(\s*([^\)]+)\s*\)/i);
-  if (m) {
-    const parts = m[1].split(",").map((s) => parseFloat(s.trim()));
-    return [parts[0] || 0, parts[1] || 0, parts[2] || 0, parts[3] ?? 1];
-  }
-  return [247, 241, 232, 1];
-}
-
-/** Lerp hex / rgb / rgba colors for cream + ring atmospheres */
-export function lerpColor(a: string, b: string, t: number): string {
-  const T = clamp(t, 0, 1);
-  const A = parseColor(a);
-  const B = parseColor(b);
-  const r = Math.round(A[0] + (B[0] - A[0]) * T);
-  const g = Math.round(A[1] + (B[1] - A[1]) * T);
-  const bl = Math.round(A[2] + (B[2] - A[2]) * T);
-  const alpha = A[3] + (B[3] - A[3]) * T;
-  if (alpha < 0.999) {
-    return `rgba(${r},${g},${bl},${Number(alpha.toFixed(4))})`;
-  }
-  return `rgb(${r},${g},${bl})`;
-}
-
-function lerpStageAtmosphere(layers: StageContent[], progress: number) {
-  if (layers.length === 0) {
-    return { cream: "#F7F1E8", ring: "rgba(245,130,32,0.18)" };
-  }
-  if (layers.length === 1) {
-    return { cream: layers[0].cream, ring: layers[0].ring };
-  }
-  const max = layers.length - 1;
-  const p = clamp(progress, 0, max);
-  const i0 = Math.floor(p);
-  const i1 = Math.min(i0 + 1, max);
-  const t = p - i0;
-  return {
-    cream: lerpColor(layers[i0].cream, layers[i1].cream, t),
-    ring: lerpColor(layers[i0].ring, layers[i1].ring, t),
-  };
-}
-
-/** Soft multi-stop concentric rings */
+/** Soft multi-stop concentric rings (static CSS; scale animated on wrapper) */
 function ringBackground(ring: string) {
   return [
     `radial-gradient(circle at 55% 48%, transparent 0, transparent 14%, ${ring} 14.5%, transparent 15.5%)`,
@@ -114,37 +53,28 @@ function creamAtmosphere(cream: string) {
   ].join(", ");
 }
 
-/** Subtle CSS noise via SVG fractalNoise data-URI */
 const NOISE_URI =
   "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E\")";
 
-function StageBackdrop({ cream, ring }: { cream: string; ring: string }) {
+function FloatingChips({ prefix }: { prefix: string }) {
   return (
     <>
-      <div
-        className="absolute inset-0"
-        style={{ backgroundImage: creamAtmosphere(cream) }}
+      <span
+        data-gsap={`${prefix}-chip`}
+        data-chip="1"
+        className="pointer-events-none absolute left-[8%] top-[22%] z-[5] h-3 w-3 rounded-full bg-[#F58220]/70 shadow-[0_0_18px_rgba(245,130,32,0.55)]"
         aria-hidden
       />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.85]"
-        style={{ backgroundImage: ringBackground(ring) }}
+      <span
+        data-gsap={`${prefix}-chip`}
+        data-chip="2"
+        className="pointer-events-none absolute right-[12%] top-[38%] z-[5] h-2.5 w-2.5 rounded-full bg-[#0577FF]/55 shadow-[0_0_14px_rgba(5,119,255,0.45)]"
         aria-hidden
       />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.035] mix-blend-multiply"
-        style={{
-          backgroundImage: NOISE_URI,
-          backgroundSize: "180px 180px",
-        }}
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 75% 70% at 50% 45%, transparent 40%, rgba(28,28,28,0.07) 100%)",
-        }}
+      <span
+        data-gsap={`${prefix}-chip`}
+        data-chip="3"
+        className="pointer-events-none absolute bottom-[28%] left-[14%] z-[5] h-2 w-2 rounded-full bg-[#003B8E]/40"
         aria-hidden
       />
     </>
@@ -226,20 +156,17 @@ export function PhoneFrame({
   );
 }
 
-function LoanLayer({
+function LoanScene({
+  id,
   toast,
   loan,
   framed = false,
-  parallax = 0,
 }: {
+  id: string;
   toast: string;
   loan?: LoanStageData;
   framed?: boolean;
-  /** Extra slide-local offset for toast parallax (scroll scrub) */
-  parallax?: number;
 }) {
-  const reduce = useReducedMotion();
-
   const card = (
     <UpcomingPaymentsCard
       paidLabel={loan?.paidLabel}
@@ -249,45 +176,33 @@ function LoanLayer({
   );
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center">
-      <motion.div
+    <div
+      data-gsap-scene={id}
+      className="absolute inset-0 flex items-center justify-center"
+      style={{ perspective: "1400px" }}
+    >
+      <FloatingChips prefix={id} />
+
+      <div
+        data-gsap="toast"
         className={`absolute z-20 ${
           framed
             ? "left-[4%] top-[4%] sm:left-[6%] sm:top-[6%]"
             : "left-[4%] top-[8%] sm:left-[7%] sm:top-[10%]"
         }`}
-        style={
-          reduce
-            ? undefined
-            : { y: parallax * -28, x: parallax * -8 }
-        }
-        initial={reduce ? false : { opacity: 0, y: 10 }}
-        animate={reduce ? { opacity: 1 } : { opacity: 1 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        style={{ willChange: "transform, opacity" }}
       >
-        <motion.div
-          animate={reduce ? undefined : { y: [0, -5, 0] }}
-          transition={
-            reduce
-              ? undefined
-              : { duration: 4.2, repeat: Infinity, ease: "easeInOut" }
-          }
-        >
-          <DepositToast text={toast} />
-        </motion.div>
-      </motion.div>
+        <DepositToast text={toast} />
+      </div>
 
       <div
+        data-gsap="main-card"
         className={`relative z-10 ${
           framed
             ? "w-full max-w-none"
             : "w-[88%] max-w-[min(100%,340px)] sm:max-w-[360px]"
         }`}
-        style={
-          reduce
-            ? undefined
-            : { transform: `translateY(${parallax * 12}px)` }
-        }
+        style={{ willChange: "transform, opacity, filter", transformStyle: "preserve-3d" }}
       >
         {framed ? <PhoneFrame>{card}</PhoneFrame> : card}
       </div>
@@ -295,19 +210,17 @@ function LoanLayer({
   );
 }
 
-function AdvanceLayer({
+function AdvanceScene({
+  id,
   toast,
   advance,
   framed = false,
-  parallax = 0,
 }: {
+  id: string;
   toast: string;
   advance?: AdvanceStageData;
   framed?: boolean;
-  parallax?: number;
 }) {
-  const reduce = useReducedMotion();
-
   const balance = (
     <BalanceCard
       balance={advance?.balance}
@@ -317,157 +230,156 @@ function AdvanceLayer({
   );
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center">
-      <motion.div
+    <div
+      data-gsap-scene={id}
+      className="absolute inset-0 flex items-center justify-center"
+      style={{ perspective: "1400px" }}
+    >
+      <FloatingChips prefix={id} />
+
+      <div
+        data-gsap="toast"
         className={`absolute z-30 ${
           framed
             ? "right-[3%] top-[3%] sm:right-[5%] sm:top-[5%]"
             : "right-[3%] top-[6%] sm:right-[7%] sm:top-[8%]"
         }`}
-        style={
-          reduce
-            ? undefined
-            : { y: parallax * -32, x: parallax * 10 }
-        }
-        initial={reduce ? false : { opacity: 0, y: 10 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        style={{ willChange: "transform, opacity" }}
       >
-        <motion.div
-          animate={reduce ? undefined : { y: [0, -5, 0] }}
-          transition={
-            reduce
-              ? undefined
-              : {
-                  duration: 4.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.2,
-                }
-          }
-        >
-          <DepositToast text={toast} />
-        </motion.div>
-      </motion.div>
+        <DepositToast text={toast} />
+      </div>
 
       <div
+        data-gsap="main-card"
         className={`relative z-10 ${
           framed
             ? "w-full max-w-none"
             : "w-[84%] max-w-[min(100%,320px)] sm:max-w-[340px]"
         }`}
-        style={
-          reduce
-            ? undefined
-            : { transform: `translateY(${parallax * 10}px)` }
-        }
+        style={{ willChange: "transform, opacity, filter", transformStyle: "preserve-3d" }}
       >
         {framed ? <PhoneFrame>{balance}</PhoneFrame> : balance}
       </div>
 
-      {!framed ? (
-        <motion.div
-          className="absolute bottom-[5%] left-[3%] z-20 w-[56%] max-w-[min(100%,220px)] sm:left-[5%] sm:max-w-[240px]"
-          style={
-            reduce
-              ? undefined
-              : { y: parallax * 36, x: parallax * -6 }
-          }
-          initial={reduce ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <motion.div
-            animate={reduce ? undefined : { y: [0, -4, 0] }}
-            transition={
-              reduce
-                ? undefined
-                : {
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.6,
-                  }
-            }
-            className="relative"
-            style={{
-              filter: "drop-shadow(0 16px 32px rgba(28,28,28,0.12))",
-            }}
-          >
-            <div
-              className="pointer-events-none absolute -bottom-2 -right-2 -z-10 h-full w-full rounded-[1.4rem] bg-white/40 backdrop-blur-sm"
-              aria-hidden
-            />
-            <UpcomingMiniCard />
-          </motion.div>
-        </motion.div>
-      ) : (
-        <motion.div
-          className="absolute bottom-[6%] left-[4%] z-20 w-[52%] max-w-[180px]"
-          initial={reduce ? false : { opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <UpcomingMiniCard />
-        </motion.div>
-      )}
+      <div
+        data-gsap="mini"
+        className={
+          framed
+            ? "absolute bottom-[6%] left-[4%] z-20 w-[52%] max-w-[180px]"
+            : "absolute bottom-[5%] left-[3%] z-20 w-[56%] max-w-[min(100%,220px)] sm:left-[5%] sm:max-w-[240px]"
+        }
+        style={{
+          willChange: "transform, opacity",
+          filter: framed
+            ? undefined
+            : "drop-shadow(0 16px 32px rgba(28,28,28,0.12))",
+        }}
+      >
+        {!framed ? (
+          <div
+            className="pointer-events-none absolute -bottom-2 -right-2 -z-10 h-full w-full rounded-[1.4rem] bg-white/40 backdrop-blur-sm"
+            aria-hidden
+          />
+        ) : null}
+        <UpcomingMiniCard />
+      </div>
     </div>
   );
 }
 
-function SlideContent({
+function SceneForContent({
+  id,
   content,
   framed = false,
-  parallax = 0,
 }: {
+  id: string;
   content: StageContent;
   framed?: boolean;
-  parallax?: number;
 }) {
   return content.kind === "loan" ? (
-    <LoanLayer
-      toast={content.toast}
-      loan={content.loan}
-      framed={framed}
-      parallax={parallax}
-    />
+    <LoanScene id={id} toast={content.toast} loan={content.loan} framed={framed} />
   ) : (
-    <AdvanceLayer
+    <AdvanceScene
+      id={id}
       toast={content.toast}
       advance={content.advance}
       framed={framed}
-      parallax={parallax}
     />
   );
 }
 
 /**
- * Discrete layer (mobile / reduced-motion fallback).
- * Desktop slideshow uses SlideDeck instead.
+ * Shared product stage: all product scenes stacked; GSAP choreographs
+ * individual nodes (toast, cards, progress, rings, bg) — not opacity slides.
  */
-export function StageLayer({
-  content,
-  active,
+export function ProductStage({
+  layers,
+  ids,
   framed = false,
+  className = "",
+  initialCream,
+  initialRing,
 }: {
-  content: StageContent;
-  active: boolean;
+  layers: StageContent[];
+  /** Stable scene ids matching product ids (automotriz, garantia, hipotecas) */
+  ids: string[];
   framed?: boolean;
+  className?: string;
+  initialCream?: string;
+  initialRing?: string;
 }) {
-  const reduce = useReducedMotion();
+  const cream = initialCream ?? layers[0]?.cream ?? "#F7F1E8";
+  const ring = initialRing ?? layers[0]?.ring ?? "rgba(245,130,32,0.18)";
 
   return (
     <div
-      className="absolute inset-0"
-      style={{
-        opacity: active ? 1 : 0,
-        pointerEvents: active ? "auto" : "none",
-        zIndex: active ? 2 : 0,
-        transition: reduce ? "none" : "opacity 0.35s ease",
-      }}
-      aria-hidden={!active}
+      data-gsap="stage-root"
+      className={`relative h-full w-full overflow-hidden ${
+        framed
+          ? "min-h-[28rem] sm:min-h-[30rem]"
+          : "min-h-[22rem] sm:min-h-[26rem] lg:min-h-full"
+      } ${className}`}
     >
-      <StageBackdrop cream={content.cream} ring={content.ring} />
+      {/* Cream backdrop — color tweened by GSAP */}
+      <div
+        data-gsap="stage-bg"
+        className="absolute inset-0"
+        style={{ backgroundImage: creamAtmosphere(cream), backgroundColor: cream }}
+        aria-hidden
+      />
+
+      {/* Concentric rings — scale/pulse via GSAP */}
+      <div
+        data-gsap="stage-rings"
+        className="pointer-events-none absolute inset-0 origin-center opacity-[0.85]"
+        style={{ backgroundImage: ringBackground(ring) }}
+        aria-hidden
+      />
+
+      <div
+        data-gsap="stage-rings-inner"
+        className="pointer-events-none absolute inset-[8%] origin-center rounded-full opacity-40"
+        style={{
+          backgroundImage: ringBackground(ring),
+          backgroundSize: "100% 100%",
+        }}
+        aria-hidden
+      />
+
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.035] mix-blend-multiply"
+        style={{ backgroundImage: NOISE_URI, backgroundSize: "180px 180px" }}
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 75% 70% at 50% 45%, transparent 40%, rgba(28,28,28,0.07) 100%)",
+        }}
+        aria-hidden
+      />
+
       <div
         className={`relative h-full w-full ${
           framed
@@ -475,153 +387,60 @@ export function StageLayer({
             : "px-3 py-8 sm:px-6 sm:py-10 md:py-12 lg:px-10 lg:py-14"
         }`}
       >
-        <SlideContent content={content} framed={framed} />
+        {layers.map((layer, i) => (
+          <SceneForContent
+            key={ids[i] ?? i}
+            id={ids[i] ?? `scene-${i}`}
+            content={layer}
+            framed={framed}
+          />
+        ))}
       </div>
     </div>
   );
 }
 
-/**
- * Scroll-scrubbed slideshow: each product slide translates / scales / fades
- * based on continuous progress (0 → n-1), not opacity-only swaps.
- */
-function SlideDeck({
-  layers,
-  progress,
-  framed = false,
+/** Mobile single-product stage (one layer, lighter GSAP reveal) */
+export function MobileProductStage({
+  content,
+  id,
+  className = "",
 }: {
-  layers: StageContent[];
-  progress: number;
-  framed?: boolean;
+  content: StageContent;
+  id: string;
+  className?: string;
 }) {
-  const reduce = useReducedMotion();
-  const atmosphere = lerpStageAtmosphere(layers, progress);
-
   return (
-    <>
-      <StageBackdrop cream={atmosphere.cream} ring={atmosphere.ring} />
-
-      <div
-        className="absolute inset-0"
-        style={{
-          perspective: reduce ? undefined : "1400px",
-          perspectiveOrigin: "50% 45%",
-        }}
-      >
-        {layers.map((layer, i) => {
-          const d = progress - i;
-          const abs = Math.abs(d);
-          const visible = abs < 1.05;
-
-          if (reduce) {
-            // Reduced motion: soft crossfade only
-            const opacity = clamp(1 - abs * 1.15, 0, 1);
-            return (
-              <div
-                key={i}
-                className="absolute inset-0"
-                style={{
-                  opacity,
-                  pointerEvents: abs < 0.5 ? "auto" : "none",
-                  zIndex: Math.round((1 - abs) * 10),
-                }}
-                aria-hidden={abs >= 0.5}
-              >
-                <div
-                  className={`relative h-full w-full ${
-                    framed
-                      ? "px-3 py-6 sm:px-5 sm:py-8"
-                      : "px-3 py-8 sm:px-6 sm:py-10 md:py-12 lg:px-10 lg:py-14"
-                  }`}
-                >
-                  <SlideContent content={layer} framed={framed} />
-                </div>
-              </div>
-            );
-          }
-
-          // Diapositiva: current exits upward as next enters from below
-          const yPct = d * -58;
-          const scale = 1 - Math.min(abs, 1) * 0.07;
-          const opacity = clamp(1 - abs * 0.92, 0, 1);
-          const rotateX = clamp(d * 9, -10, 10);
-          const blur = abs > 0.55 ? (abs - 0.55) * 6 : 0;
-
-          return (
-            <div
-              key={i}
-              className="absolute inset-0 will-change-transform"
-              style={{
-                opacity: visible ? opacity : 0,
-                transform: visible
-                  ? `translate3d(0, ${yPct}%, 0) scale(${scale}) rotateX(${rotateX}deg)`
-                  : undefined,
-                transformOrigin: "50% 50%",
-                transformStyle: "preserve-3d",
-                filter: blur > 0.1 ? `blur(${blur.toFixed(2)}px)` : undefined,
-                pointerEvents: abs < 0.45 ? "auto" : "none",
-                zIndex: Math.round((1 - abs) * 10) + 1,
-              }}
-              aria-hidden={abs >= 0.5}
-            >
-              <div
-                className={`relative h-full w-full ${
-                  framed
-                    ? "px-3 py-6 sm:px-5 sm:py-8"
-                    : "px-3 py-8 sm:px-6 sm:py-10 md:py-12 lg:px-10 lg:py-14"
-                }`}
-              >
-                <SlideContent
-                  content={layer}
-                  framed={framed}
-                  parallax={clamp(d, -1, 1)}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </>
+    <ProductStage
+      layers={[content]}
+      ids={[id]}
+      framed
+      className={className}
+      initialCream={content.cream}
+      initialRing={content.ring}
+    />
   );
 }
 
+/** @deprecated Prefer ProductStage — kept for any external imports */
 export function StageFrame({
   layers,
-  activeIndex = 0,
-  progress,
   framed = false,
   className = "",
 }: {
   layers: StageContent[];
   activeIndex?: number;
-  /** Continuous scroll progress across slides (0 → n-1). Prefer over activeIndex on desktop. */
   progress?: number;
   framed?: boolean;
   className?: string;
 }) {
-  const p = progress ?? activeIndex;
-  const useSlideshow = layers.length > 1 && !framed;
-
+  const ids = layers.map((_, i) => `legacy-${i}`);
   return (
-    <div
-      className={`relative h-full w-full overflow-hidden ${
-        framed
-          ? "min-h-[28rem] sm:min-h-[30rem]"
-          : "min-h-[22rem] sm:min-h-[26rem] lg:min-h-full"
-      } ${className}`}
-    >
-      {useSlideshow ? (
-        <SlideDeck layers={layers} progress={p} framed={framed} />
-      ) : (
-        layers.map((layer, i) => (
-          <StageLayer
-            key={i}
-            content={layer}
-            active={i === Math.round(p)}
-            framed={framed}
-          />
-        ))
-      )}
-    </div>
+    <ProductStage
+      layers={layers}
+      ids={ids}
+      framed={framed}
+      className={className}
+    />
   );
 }
