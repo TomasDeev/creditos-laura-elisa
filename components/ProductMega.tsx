@@ -203,7 +203,6 @@ const BLOCKS: Block[] = [
   },
 ];
 
-const HEADER_OFFSET = "4.75rem";
 
 function ProductCopy({ block }: { block: Block }) {
   const Badge = block.Badge;
@@ -1041,28 +1040,16 @@ export function ProductMega() {
       mm.add("(min-width: 1024px)", () => {
         const master = buildMasterTimeline(stageRoot, reduceMotion);
 
-        // Pin the visual stage while left copy scrolls (Possible-style).
-        // pinSpacing:false — section height comes from the left column.
+        // CSS sticky holds the stage (avoids GSAP pin spacer / blank gap).
+        // Scrub the master timeline across the full product section.
         ScrollTrigger.create({
           trigger: section,
-          start: `top top+=${HEADER_OFFSET}`,
+          start: "top 70%",
           end: "bottom bottom",
-          pin: pinTarget,
-          pinSpacing: false,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        });
-
-        // Separate scrub so Automotriz intro begins as the section enters
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top 75%",
-          end: "bottom bottom",
-          scrub: reduceMotion ? true : 0.6,
+          scrub: reduceMotion ? true : 0.65,
           animation: master,
           invalidateOnRefresh: true,
         });
-
       });
 
       // Mobile / tablet: no pin; per-product once reveals
@@ -1128,10 +1115,10 @@ export function ProductMega() {
           ))}
         </div>
 
-        <div className="relative hidden lg:block">
+        <div className="relative hidden min-h-full bg-[#F7F1E8] lg:block">
           <div
             ref={stagePinRef}
-            className="h-[calc(100vh-4.75rem)]"
+            className="sticky top-[4.75rem] h-[calc(100vh-4.75rem)]"
           >
             <div ref={stageRootRef} className="h-full w-full">
               <ProductStage layers={stages} ids={ids} />
