@@ -50,7 +50,7 @@ export function Sucursal({ className = "" }: SucursalProps) {
             </h2>
             <p className="mt-4 text-base leading-relaxed text-charcoal-muted sm:text-lg">
               Estamos en {SITE.address}. Cotizamos financiamiento automotriz,
-              hipotecas y préstamos personales de frente.
+              garantía vehicular e hipotecas de frente.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-charcoal">
               <li className="flex gap-3">

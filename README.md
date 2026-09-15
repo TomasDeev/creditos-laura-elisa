@@ -1,6 +1,6 @@
 # Créditos Laura Elisa
 
-Sitio de conversión para financiamientos e hipotecas en República Dominicana: automotriz, garantía vehicular, hipotecas y préstamos personales.
+Sitio de conversión para financiamientos e hipotecas en República Dominicana: automotriz, garantía vehicular e hipotecas.
 
 ## Stack
 

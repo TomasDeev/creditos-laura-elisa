@@ -53,20 +53,6 @@ export const PRODUCTS: Product[] = [
     href: "/#contacto",
     icon: "/icons/product-home.svg",
   },
-  {
-    id: "personal",
-    title: "Préstamos Personales",
-    description:
-      "Capital para lo que la vida pide hoy: educación, salud, negocio o imprevistos, con plazos flexibles.",
-    highlights: [
-      "Montos a tu necesidad",
-      "Pagos flexibles",
-      "Sin letras pequeñas",
-    ],
-    cta: "Pedir préstamo",
-    href: "/#contacto",
-    icon: "/icons/product-cash.svg",
-  },
 ];
 
 export const REQUIREMENTS = [

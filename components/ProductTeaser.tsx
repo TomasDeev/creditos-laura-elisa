@@ -18,7 +18,7 @@ export function ProductTeaser() {
             El financiamiento que se ajusta a ti
           </h2>
           <p className="mt-4 text-base text-charcoal-muted sm:text-lg">
-            Automotriz, garantía vehicular, hipotecas y préstamos personales — con claridad y cercanía.
+            Automotriz, garantía vehicular e hipotecas — con claridad y cercanía.
           </p>
         </Reveal>
 

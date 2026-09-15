@@ -7,7 +7,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "¿Qué es Créditos Laura Elisa?",
     answer:
-      "Créditos Laura Elisa es una financiera en República Dominicana. Ofrecemos financiamiento automotriz, préstamos con garantía vehicular, hipotecas y préstamos personales — con atención cercana y desembolso ágil.",
+      "Créditos Laura Elisa es una financiera en República Dominicana. Ofrecemos financiamiento automotriz, préstamos con garantía vehicular e hipotecas — con atención cercana y desembolso ágil.",
   },
   {
     question: "¿Cuáles son los requisitos para aplicar?",

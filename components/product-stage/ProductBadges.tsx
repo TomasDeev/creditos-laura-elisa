@@ -83,31 +83,3 @@ export function BadgeHipotecas({ size = 56 }: { size?: number }) {
   );
 }
 
-export function BadgePersonales({ size = 56 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      aria-hidden
-    >
-      <circle cx="32" cy="32" r="32" fill="#4A2208" />
-      <circle cx="32" cy="32" r="22" fill="#FFD31F" />
-      <circle cx="32" cy="32" r="14" fill="#F58220" />
-      <path
-        d="M32 22v20M28 26h6.5a3.5 3.5 0 0 1 0 7H29a3.5 3.5 0 0 0 0 7H36"
-        stroke="#fff"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M48 18c3.5 2 6 5.5 7 10M16 46c-3.5-2-6-5.5-7-10"
-        stroke="#57C3FF"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
