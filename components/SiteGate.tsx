@@ -68,6 +68,9 @@ export function SiteGate({ children }: Props) {
     window.setTimeout(() => setShake(false), 450);
   };
 
+  // Site gate disabled — always show content
+  return <>{children}</>;
+
   if (!ready) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-white">

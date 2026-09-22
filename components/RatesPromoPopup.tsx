@@ -8,6 +8,9 @@ import { SITE, WHATSAPP_URL } from "@/lib/constants";
 const STORAGE_KEY = "laura-elisa-rates-v2";
 
 export function RatesPromoPopup() {
+  // Popup disabled — never show
+  return null;
+
   const titleId = useId();
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);

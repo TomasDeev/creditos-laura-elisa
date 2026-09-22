@@ -15,18 +15,16 @@ export function Sucursal({ className = "" }: SucursalProps) {
       <div className="container-narrow">
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           <Reveal>
-            <figure className="overflow-hidden rounded-[2rem] border border-border bg-white shadow-[0_16px_50px_rgba(0,59,142,0.12)]">
-              <div className="relative aspect-[4/3] w-full sm:aspect-[16/11]">
-                <Image
-                  src="/sucursal.jpg"
-                  alt={`Sucursal ${SITE.name} — Plaza Nica`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority={false}
-                />
-              </div>
-              <figcaption className="border-t border-border bg-white px-5 py-4 sm:px-6">
+            <div className="overflow-hidden rounded-[2rem] border border-border bg-white shadow-[0_16px_50px_rgba(0,59,142,0.12)]">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4685.391774798644!2d-69.78056392405105!3d18.493331270004266!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eaf8756fc8c6743%3A0x20e1b736f389f700!2sCr%C3%A9ditos%20Laura%20Elisa!5e1!3m2!1ses-419!2sdo!4v1789565798863!5m2!1ses-419!2sdo"
+                title={`Mapa de ${SITE.name} — Plaza Nica`}
+                className="block h-[280px] w-full border-0 sm:h-[340px]"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+              <div className="border-t border-border bg-white px-5 py-4 sm:px-6">
                 <p className="text-sm font-extrabold text-magenta">{SITE.slogan}</p>
                 <p className="mt-1 text-sm text-charcoal-muted">
                   <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-charcoal hover:text-orange">
@@ -37,8 +35,8 @@ export function Sucursal({ className = "" }: SucursalProps) {
                     {SITE.phoneDisplay}
                   </a>
                 </p>
-              </figcaption>
-            </figure>
+              </div>
+            </div>
           </Reveal>
 
           <Reveal delay={0.06}>
